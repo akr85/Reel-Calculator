@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexible Film Reel Calculator</title>
+    <style>
+        :root {
+            --color-white: rgba(255, 255, 255, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-slate-900-rgb: 19, 52, 59;
+            
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-error: var(--color-red-500);
+            
+            --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-size-base: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+            --space-48: 48px;
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+            padding: var(--space-20);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--space-32);
+            background-color: var(--color-surface);
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 8px rgba(var(--color-slate-900-rgb), 0.1);
+        }
+
+        h1 {
+            font-size: var(--font-size-3xl);
+            color: var(--color-primary);
+            text-align: center;
+            margin-bottom: var(--space-32);
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: var(--space-24);
+        }
+
+        label {
+            display: block;
+            font-size: var(--font-size-base);
+            color: var(--color-text);
+            margin-bottom: var(--space-8);
+            font-weight: 500;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: var(--space-12);
+            align-items: center;
+        }
+
+        input[type="number"] {
+            flex: 1;
+            padding: var(--space-12);
+            font-size: var(--font-size-base);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            background-color: var(--color-white);
+            color: var(--color-text);
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        select {
+            padding: var(--space-12);
+            font-size: var(--font-size-base);
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius);
+            background-color: var(--color-white);
+            color: var(--color-text);
+            cursor: pointer;
+            min-width: 100px;
+            transition: border-color 0.2s;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .button-group {
+            display: flex;
+            gap: var(--space-16);
+            margin-top: var(--space-32);
+        }
+
+        button {
+            flex: 1;
+            padding: var(--space-16);
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-calculate {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .btn-calculate:hover {
+            background-color: var(--color-primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-calculate:active {
+            background-color: var(--color-primary-active);
+            transform: translateY(0);
+        }
+
+        .btn-reset {
+            background-color: var(--color-gray-200);
+            color: var(--color-text);
+        }
+
+        .btn-reset:hover {
+            background-color: var(--color-gray-300);
+        }
+
+        .results {
+            margin-top: var(--space-32);
+            padding: var(--space-24);
+            background-color: rgba(var(--color-teal-500-rgb), 0.05);
+            border: 2px solid var(--color-primary);
+            border-radius: var(--border-radius);
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .results h2 {
+            font-size: var(--font-size-2xl);
+            color: var(--color-primary);
+            margin-bottom: var(--space-20);
+        }
+
+        .result-item {
+            margin-bottom: var(--space-16);
+            padding: var(--space-16);
+            background-color: var(--color-white);
+            border-radius: var(--border-radius);
+        }
+
+        .result-label {
+            font-size: var(--font-size-base);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-8);
+        }
+
+        .result-value {
+            font-size: var(--font-size-2xl);
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .result-alternate {
+            font-size: var(--font-size-base);
+            color: var(--color-text-secondary);
+            margin-top: var(--space-8);
+        }
+
+        .error {
+            margin-top: var(--space-20);
+            padding: var(--space-16);
+            background-color: rgba(192, 21, 47, 0.1);
+            border: 1px solid var(--color-error);
+            border-radius: var(--border-radius);
+            color: var(--color-error);
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .formula-info {
+            margin-top: var(--space-20);
+            padding: var(--space-16);
+            background-color: var(--color-gray-200);
+            border-radius: var(--border-radius);
+            font-size: var(--font-size-base);
+            color: var(--color-text-secondary);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: var(--space-20);
+            }
+
+            .input-wrapper {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            select {
+                width: 100%;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Flexible Film Reel Calculator</h1>
+        
+        <form id="calculatorForm">
+            <div class="form-group">
+                <label for="length">Roll Length</label>
+                <div class="input-wrapper">
+                    <input type="number" id="length" step="any" placeholder="1000">
+                    <select id="lengthUnit">
+                        <option value="m">m</option>
+                        <option value="ft">ft</option>
+                        <option value="in">in</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="coreDiameter">Core Diameter (ID)</label>
+                <div class="input-wrapper">
+                    <input type="number" id="coreDiameter" step="any" placeholder="76">
+                    <select id="coreDiameterUnit">
+                        <option value="mm">mm</option>
+                        <option value="in">in</option>
+                        <option value="cm">cm</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="thickness">Material Thickness</label>
+                <div class="input-wrapper">
+                    <input type="number" id="thickness" step="any" placeholder="25">
+                    <select id="thicknessUnit">
+                        <option value="μm">μm</option>
+                        <option value="mil">mil</option>
+                        <option value="mm">mm</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="width">Roll Width</label>
+                <div class="input-wrapper">
+                    <input type="number" id="width" step="any" placeholder="1000">
+                    <select id="widthUnit">
+                        <option value="mm">mm</option>
+                        <option value="in">in</option>
+                        <option value="m">m</option>
+                        <option value="cm">cm</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="density">Material Density</label>
+                <div class="input-wrapper">
+                    <input type="number" id="density" step="any" placeholder="0.92">
+                    <select id="densityUnit">
+                        <option value="g/cm³">g/cm³</option>
+                        <option value="kg/m³">kg/m³</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn-calculate">Calculate</button>
+                <button type="button" class="btn-reset" onclick="resetForm()">Clear All</button>
+            </div>
+        </form>
+
+        <div id="error" class="error"></div>
+
+        <div id="results" class="results">
+            <h2>Results</h2>
+            
+            <div class="result-item">
+                <div class="result-label">Roll Outer Diameter (OD)</div>
+                <div class="result-value" id="odResult">-</div>
+                <div class="result-alternate" id="odAlternate">-</div>
+            </div>
+
+            <div class="result-item">
+                <div class="result-label">Roll Weight</div>
+                <div class="result-value" id="weightResult">-</div>
+                <div class="result-alternate" id="weightAlternate">-</div>
+            </div>
+
+            <div class="formula-info">
+                <strong>Formulas used:</strong><br>
+                OD = √((4 × L × t / π) + ID²)<br>
+                Weight = π × Width × (OD² - ID²) × Density / 4
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Conversion factors to base units (meters for length/diameter, kg/m³ for density)
+        const conversions = {
+            length: {
+                m: 1,
+                ft: 0.3048,
+                in: 0.0254
+            },
+            diameter: {
+                mm: 0.001,
+                in: 0.0254,
+                cm: 0.01
+            },
+            thickness: {
+                μm: 0.000001,
+                mil: 0.0000254,
+                mm: 0.001
+            },
+            width: {
+                mm: 0.001,
+                in: 0.0254,
+                cm: 0.01,
+                m: 1
+            },
+            density: {
+                'g/cm³': 1000,
+                'kg/m³': 1
+            }
+        };
+
+        document.getElementById('calculatorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculate();
+        });
+
+        function calculate() {
+            hideError();
+            hideResults();
+
+            // Get input values
+            const length = parseFloat(document.getElementById('length').value);
+            const lengthUnit = document.getElementById('lengthUnit').value;
+            
+            const coreDiameter = parseFloat(document.getElementById('coreDiameter').value);
+            const coreDiameterUnit = document.getElementById('coreDiameterUnit').value;
+            
+            const thickness = parseFloat(document.getElementById('thickness').value);
+            const thicknessUnit = document.getElementById('thicknessUnit').value;
+            
+            const width = parseFloat(document.getElementById('width').value);
+            const widthUnit = document.getElementById('widthUnit').value;
+            
+            const density = parseFloat(document.getElementById('density').value);
+            const densityUnit = document.getElementById('densityUnit').value;
+
+            // Validate inputs
+            if (isNaN(length) || isNaN(coreDiameter) || isNaN(thickness) || isNaN(width) || isNaN(density)) {
+                showError('Please fill in all fields with valid numbers.');
+                return;
+            }
+
+            if (length <= 0 || coreDiameter <= 0 || thickness <= 0 || width <= 0 || density <= 0) {
+                showError('All values must be positive numbers.');
+                return;
+            }
+
+            // Convert all to base units (meters and kg/m³)
+            const L = length * conversions.length[lengthUnit];
+            const ID = coreDiameter * conversions.diameter[coreDiameterUnit];
+            const t = thickness * conversions.thickness[thicknessUnit];
+            const W = width * conversions.width[widthUnit];
+            const rho = density * conversions.density[densityUnit];
+
+            // Calculate Outer Diameter: OD = √((4 × L × t / π) + ID²)
+            const OD_squared = (4 * L * t / Math.PI) + (ID * ID);
+            
+            if (OD_squared < 0) {
+                showError('Invalid calculation: Check if core diameter is too large for the given length and thickness.');
+                return;
+            }
+            
+            const OD = Math.sqrt(OD_squared);
+
+            // Calculate Weight: Weight = π × Width × (OD² - ID²) × Density / 4
+            const weight = (Math.PI * W * (OD * OD - ID * ID) * rho) / 4;
+
+            // Display results
+            const OD_mm = OD * 1000;
+            const OD_in = OD * 39.3701;
+            const weight_kg = weight;
+            const weight_lb = weight * 2.20462;
+
+            document.getElementById('odResult').textContent = OD_mm.toFixed(2) + ' mm';
+            document.getElementById('odAlternate').textContent = '(' + OD_in.toFixed(2) + ' inches)';
+            
+            document.getElementById('weightResult').textContent = weight_kg.toFixed(2) + ' kg';
+            document.getElementById('weightAlternate').textContent = '(' + weight_lb.toFixed(2) + ' lbs)';
+
+            showResults();
+        }
+
+        function resetForm() {
+            document.getElementById('calculatorForm').reset();
+            hideResults();
+            hideError();
+        }
+
+        function showResults() {
+            document.getElementById('results').classList.add('show');
+        }
+
+        function hideResults() {
+            document.getElementById('results').classList.remove('show');
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+        }
+
+        function hideError() {
+            document.getElementById('error').classList.remove('show');
+        }
+    </script>
+</body>
+</html>
